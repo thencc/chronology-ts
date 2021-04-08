@@ -1,4 +1,4 @@
-import { GpTs } from 'gpt-ts';
+import { AnswerResponse, ClassificationResponse, CompletionRequest, CompletionResponse, EngineId, GpTs, SearchResponse } from 'gpt-ts';
 import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
 import * as path from 'path';
 
@@ -6,6 +6,13 @@ import { inject } from './utils';
 
 export class Conversation extends GpTs {
 	text = '';
+	notes = ''; // temp text bucket for method chaining
+	lastResponses = {
+		completion: null as CompletionResponse,
+		search: null as SearchResponse,
+		classification: null as ClassificationResponse,
+		answer: null as AnswerResponse
+	};
 
 	constructor(apiKey: string) {
 		super(apiKey);
@@ -37,18 +44,23 @@ export class Conversation extends GpTs {
 		return this;
 	}
 
-	// TBD can input ask be any openai call type?
-	async reply(ask: any): Promise<string> {
-		console.log('reply, ask:', ask);
+	appendNotes(): this {
+		this.append(this.notes);
+		return this;
+	}
 
-		// TODO move this work to gpt-ts
-		const res = await ask();
-		// console.log('res', res);
+	// for daisy chaining methods (jquery style)
+	async genCompletion(engineId: EngineId, options: CompletionRequest): Promise<this> {
+		const gRes = await this.createCompletion(engineId, options);
+		this.lastResponses.completion = gRes;
+		return this;
+	}
 
-		const json = await res.json(); // type: CompletionResponse
-		// console.log('json', json);
-
-		return json.choices[0].text.trim();
+	saveCompletionToNotes(choiceIndex: number): this {
+		if (this.lastResponses.completion) {
+			this.notes = this.lastResponses.completion.choices[choiceIndex].text;
+		}
+		return this;
 	}
 
 }

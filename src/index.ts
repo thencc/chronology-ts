@@ -1,10 +1,9 @@
 import { GpTs } from 'gpt-ts';
+export * from './utils'; // for lib users
 
-export * from './utils';
 // import { AnswerRequest, ClassificationRequest, CompletionRequest, EngineId, SearchRequest } from './typings';
 
-// in case this is not the web import fetch
-import fetch from 'node-fetch';
+import { Conversation } from './Conversation';
 
 export class Chronology extends GpTs {
 	// hello = 'world';
@@ -13,12 +12,10 @@ export class Chronology extends GpTs {
 		super(apiKey);
 	}
 
-	async listEngines(): Promise<any> {
-		return await fetch('https://api.openai.com/v1/engines', {
-			headers: {
-				Authorization: `Bearer ${this.apiKey}`
-			}
-		});
+	createConversation(): Conversation {
+		// console.log('createConversation');
+		const convo = new Conversation(this.apiKey);
+		return convo;
 	}
 
 }

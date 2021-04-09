@@ -7,55 +7,71 @@ import { Chronology } from '../src';
 (async () => {
 	const openai_apiKey = '';
 
+	const chrono = new Chronology(openai_apiKey);
+	// console.log('chrono', chrono);
 
-	const c = new Chronology(openai_apiKey);
-	// console.log('c', c);
-
-	const cc = c.createConversation();
-	cc
+	const convo = chrono.createConversation();
+	convo
 		.addTemplate('../demo/prompts/artist.txt')
-		.inject('Spencer', 'Axl Rose', 'Rock', 'Sweet Child O\' Mine', 'his family', 'Where is the best place to live?'); // 1st question is last arg
-	// .append('\nappended text');
-
-	// console.log(cc.text);
+		.inject(
+			'Spencer', 				// {0}
+			'Axl Rose', 			// {1}
+			'Rock', 				// {2}
+			'Sweet Child O\' Mine', // {3}
+			'his family', 			// {4}
+			'Where is the best place to live?' // {5} // 1st convo question is last arg
+		);
+	// console.log(convo.text);
 
 	// --------
 
-	const replyObj = await cc.createCompletion('ada', {
-		prompt: cc.text,
+	const replyObj = await convo.createCompletion('ada', {
+		prompt: convo.text,
 		stop: '\nSpencer: ',
 		max_tokens: 24
 	});
 	const replyText = replyObj.choices[0].text;
-	cc.append(`${replyText}`);
-	// console.log(cc.text);
+	convo.append(`${replyText}`);
+	// console.log(convo.text);
 
 	// --------
 
 	// next Q
-	cc.append('\nSpencer: And where was the last gig you played?\nAxl Rose:');
-	(await cc.genCompletion('ada', {
-		prompt: cc.text,
+	convo.append('\nSpencer: And where was the last gig you played?\nAxl Rose:');
+	(await convo.genCompletion('ada', {
+		prompt: convo.text,
 		stop: '\nSpencer: ',
 		max_tokens: 24
 		// n: 1 // 1 is the default
 	}))
-		.append(cc.lastResponses.completion.choices[0].text);
+		.append(convo.responses.completion.choices[0].text);
 
 	// --------
 
 	// next Q
-	cc.append('\nSpencer: Why did you start playing music?\nAxl Rose:');
-	await cc.genCompletion('ada', {
-		prompt: cc.text,
+	convo.append('\nSpencer: Why did you start playing music?\nAxl Rose:');
+	await convo.genCompletion('ada', {
+		prompt: convo.text,
 		stop: '\nSpencer: ',
 		max_tokens: 24
 		// n: 1 // 1 is the default
 	});
-	cc.saveCompletionToNotes(0)
+	convo.saveCompletionToNotes(0)
 		.appendNotes();
 
+	// --------
+
+	// next Q
+	convo.append('\nSpencer: What do you recommend a new musician learns first?\nAxl Rose:');
+	await convo.genCompletion('ada', {
+		prompt: convo.text,
+		stop: '\nSpencer: ',
+		max_tokens: 24
+	});
+	const sentence = convo.getCompletionChoice(0);
+	convo.append(sentence);
+
 	// results:
-	console.log(cc.text);
+	console.log(convo.text);
 
 })();

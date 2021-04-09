@@ -1,6 +1,7 @@
 export const hello = (): string => 'world';
 
 // Python String.format adapted for TS + renamed inject
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const inject = (input: string, ...args: any[]): string => {
 	// adapted from: https://stackoverflow.com/a/13639670/10412744
 	let unkeyed_index = 0;

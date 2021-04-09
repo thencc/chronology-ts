@@ -1,15 +1,13 @@
-import { GpTs } from 'gpt-ts';
 export * from './utils'; // for lib users
-
-// import { AnswerRequest, ClassificationRequest, CompletionRequest, EngineId, SearchRequest } from './typings';
 
 import { Conversation } from './Conversation';
 
-export class Chronology extends GpTs {
+export class Chronology {
 	// hello = 'world';
+	apiKey: string;
 
 	constructor(apiKey: string) {
-		super(apiKey);
+		this.apiKey = apiKey;
 	}
 
 	createConversation(): Conversation {

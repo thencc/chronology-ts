@@ -7,12 +7,30 @@ import { inject } from './utils';
 export class Conversation extends GpTs {
 	text = '';
 	notes = ''; // temp text bucket for method chaining
-	lastResponses = {
+	responses = {
 		completion: null as CompletionResponse,
 		search: null as SearchResponse,
 		classification: null as ClassificationResponse,
 		answer: null as AnswerResponse
 	};
+
+	// idea:
+	completion = {
+		res: null as CompletionResponse,
+		notes: '', // temp text scratchpad
+		create: (): void => {
+			//
+			// super.createCompletion()
+		},
+
+		// unique:
+		getChoice: (index: number): string => {
+			//
+			index;
+			return '';
+		},
+		// all completion funcs live here
+	}
 
 	constructor(apiKey: string) {
 		super(apiKey);
@@ -24,10 +42,11 @@ export class Conversation extends GpTs {
 		const f = fs.readFileSync(path.join(__dirname, filepath), 'utf8');
 		// this.text += f;
 		this.append(f);
-		return this; // always return "this" so method chaining is possible
+		return this; // return "this" so method chaining is possible
 	}
 
 	// like python.format(...) but in ts
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	inject(...args: any[]): this {
 		this.text = inject(this.text, ...args);
 		return this;
@@ -52,15 +71,21 @@ export class Conversation extends GpTs {
 	// for daisy chaining methods (jquery style)
 	async genCompletion(engineId: EngineId, options: CompletionRequest): Promise<this> {
 		const gRes = await this.createCompletion(engineId, options);
-		this.lastResponses.completion = gRes;
+		this.responses.completion = gRes;
 		return this;
 	}
 
 	saveCompletionToNotes(choiceIndex: number): this {
-		if (this.lastResponses.completion) {
-			this.notes = this.lastResponses.completion.choices[choiceIndex].text;
-		}
+		this.notes = this.getCompletionChoice(choiceIndex);
 		return this;
+	}
+
+	getCompletionChoice(choiceIndex: number): string {
+		if (this.responses.completion) {
+			return this.responses.completion.choices[choiceIndex].text;
+		} else {
+			return '';
+		}
 	}
 
 }

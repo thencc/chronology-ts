@@ -23,8 +23,6 @@ import { Chronology } from '../src';
 		);
 	// console.log(convo.text);
 
-	// --------
-
 	const replyObj = await convo.createCompletion('ada', {
 		prompt: convo.text,
 		stop: '\nSpencer: ',
@@ -35,7 +33,6 @@ import { Chronology } from '../src';
 	// console.log(convo.text);
 
 	// --------
-
 	// next Q
 	convo.append('\nSpencer: And where was the last gig you played?\nAxl Rose:');
 	(await convo.genCompletion('ada', {
@@ -47,7 +44,6 @@ import { Chronology } from '../src';
 		.append(convo.responses.completion.choices[0].text);
 
 	// --------
-
 	// next Q
 	convo.append('\nSpencer: Why did you start playing music?\nAxl Rose:');
 	await convo.genCompletion('ada', {
@@ -60,17 +56,21 @@ import { Chronology } from '../src';
 		.appendNotes();
 
 	// --------
-
 	// next Q
 	convo.append('\nSpencer: What do you recommend a new musician learns first?\nAxl Rose:');
-	await convo.genCompletion('ada', {
-		prompt: convo.text,
-		stop: '\nSpencer: ',
-		max_tokens: 24
-	});
+	// genCompletion inserts convo.text as options.prompt
+	await convo.genCompletion('ada');
 	const sentence = convo.getCompletionChoice(0);
 	convo.append(sentence);
 
+	// --------
+	// next Q
+	convo.append('\nSpencer: What do you recommend a new musician learns first?\nAxl Rose:');
+	await convo.genCompletion(); // uses default engineId (convo.engine)
+	const sentence2 = convo.getCompletionChoice(0);
+	convo.append(sentence2);
+
+	// --------
 	// results:
 	console.log(convo.text);
 

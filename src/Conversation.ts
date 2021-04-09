@@ -7,6 +7,7 @@ import { inject } from './utils';
 export class Conversation extends GpTs {
 	text = '';
 	notes = ''; // temp text bucket for method chaining
+
 	responses = {
 		completion: null as CompletionResponse,
 		search: null as SearchResponse,
@@ -14,9 +15,13 @@ export class Conversation extends GpTs {
 		answer: null as AnswerResponse
 	};
 
+	// default engine used for all api calls
+	engine = 'ada' as EngineId;
+
 	// idea:
 	completion = {
 		res: null as CompletionResponse,
+		req: {} as CompletionRequest, // default options arg
 		notes: '', // temp text scratchpad
 		create: (): void => {
 			//
@@ -68,9 +73,13 @@ export class Conversation extends GpTs {
 		return this;
 	}
 
+	setEngine(inEngineId: EngineId): void {
+		this.engine = inEngineId;
+	}
+
 	// for daisy chaining methods (jquery style)
-	async genCompletion(engineId: EngineId, options: CompletionRequest): Promise<this> {
-		const gRes = await this.createCompletion(engineId, options);
+	async genCompletion(engineId?: EngineId, options?: CompletionRequest): Promise<this> {
+		const gRes = await this.createCompletion(engineId || this.engine, { ...options, prompt: this.text });
 		this.responses.completion = gRes;
 		return this;
 	}

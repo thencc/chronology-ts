@@ -11,9 +11,7 @@ export class Chronology {
 	}
 
 	createConversation(): Conversation {
-		// console.log('createConversation');
-		const convo = new Conversation(this.apiKey);
-		return convo;
+		return new Conversation(this.apiKey);
 	}
 
 }

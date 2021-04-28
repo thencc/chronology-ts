@@ -1,7 +1,25 @@
 {
 	"name": "chronology-ts",
 	"version": "1.0.0",
-	"description": "",
+	"description": "typescript port of chronology (gpt-3 python tool)",
+	"keywords": [
+		"gpt",
+		"gpt-3",
+		"ts",
+		"gpts",
+		"typescript",
+		"chronology"
+	],
+	"author": "@spencercap (@thencc)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/thencc/chronology-ts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/thencc/chronology-ts/issues"
+	},
+	"homepage": "https://github.com/thencc/chronology-ts#readme",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [

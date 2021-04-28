@@ -1,4 +1,12 @@
-import { AnswerResponse, ClassificationResponse, CompletionRequest, CompletionResponse, EngineId, GpTs, SearchResponse } from 'gpt-ts';
+import {
+	AnswerResponse,
+	ClassificationResponse,
+	CompletionRequest,
+	CompletionResponse,
+	EngineId,
+	GpTs,
+	SearchResponse,
+} from 'gpts';
 import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
 import * as path from 'path';
 
@@ -12,20 +20,20 @@ export class Conversation extends GpTs {
 		completion: null as CompletionResponse,
 		search: null as SearchResponse,
 		classification: null as ClassificationResponse,
-		answer: null as AnswerResponse
+		answer: null as AnswerResponse,
 	};
 
 	// default engine used for all api calls
 	engine = 'ada' as EngineId;
 
 	// idea:
-	completion = {
+	completionData = {
 		res: null as CompletionResponse,
 		req: {} as CompletionRequest, // default options arg
 		notes: '', // temp text scratchpad
 		create: (): void => {
 			//
-			// super.createCompletion()
+			// super.completion()
 		},
 
 		// unique:
@@ -35,7 +43,7 @@ export class Conversation extends GpTs {
 			return '';
 		},
 		// all completion funcs live here
-	}
+	};
 
 	constructor(apiKey: string) {
 		super(apiKey);
@@ -78,8 +86,12 @@ export class Conversation extends GpTs {
 	}
 
 	// for daisy chaining methods (jquery style)
-	async genCompletion(engineId?: EngineId, options?: CompletionRequest): Promise<this> {
-		const gRes = await this.createCompletion(engineId || this.engine, { ...options, prompt: this.text });
+	async genCompletion(options?: CompletionRequest & { engineId?: string }): Promise<this> {
+		const gRes = await this.completion({
+			...(options || {}),
+			engineId: options?.engineId || this.engine,
+			prompt: this.text, // use locally stored val
+		});
 		this.responses.completion = gRes;
 		return this;
 	}
@@ -96,5 +108,4 @@ export class Conversation extends GpTs {
 			return '';
 		}
 	}
-
 }

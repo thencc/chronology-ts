@@ -11,22 +11,22 @@ import { Chronology } from '../src';
 	// console.log('chrono', chrono);
 
 	const convo = chrono.createConversation();
-	convo
-		.addTemplate('../demo/prompts/artist.txt')
-		.inject(
-			'Spencer', 				// {0}
-			'Axl Rose', 			// {1}
-			'Rock', 				// {2}
-			'Sweet Child O\' Mine', // {3}
-			'his family', 			// {4}
-			'Where is the best place to live?' // {5} // 1st convo question is last arg
-		);
+	convo.addTemplate('../demo/prompts/artist.txt').inject(
+		/* {0} */ 'Spencer',
+		/* {1} */ 'Axl Rose',
+		/* {2} */ 'Rock',
+		// eslint-disable-next-line quotes
+		/* {3} */ "Sweet Child O' Mine",
+		/* {4} */ 'his family',
+		/* {5} */ 'Where is the best place to live?' // 1st convo question is last arg
+	);
 	// console.log(convo.text);
 
-	const replyObj = await convo.createCompletion('ada', {
+	const replyObj = await convo.completion({
+		engineId: 'ada',
 		prompt: convo.text,
 		stop: '\nSpencer: ',
-		max_tokens: 24
+		max_tokens: 24,
 	});
 	const replyText = replyObj.choices[0].text;
 	convo.append(`${replyText}`);
@@ -35,31 +35,33 @@ import { Chronology } from '../src';
 	// --------
 	// next Q
 	convo.append('\nSpencer: And where was the last gig you played?\nAxl Rose:');
-	(await convo.genCompletion('ada', {
-		prompt: convo.text,
-		stop: '\nSpencer: ',
-		max_tokens: 24
-		// n: 1 // 1 is the default
-	}))
-		.append(convo.responses.completion.choices[0].text);
+	(
+		await convo.genCompletion({
+			engineId: 'ada',
+			prompt: convo.text,
+			stop: '\nSpencer: ',
+			max_tokens: 24,
+			// n: 1 // 1 is the default
+		})
+	).append(convo.responses.completion.choices[0].text);
 
 	// --------
 	// next Q
 	convo.append('\nSpencer: Why did you start playing music?\nAxl Rose:');
-	await convo.genCompletion('ada', {
+	await convo.genCompletion({
+		engineId: 'ada',
 		prompt: convo.text,
 		stop: '\nSpencer: ',
-		max_tokens: 24
+		max_tokens: 24,
 		// n: 1 // 1 is the default
 	});
-	convo.saveCompletionToNotes(0)
-		.appendNotes();
+	convo.saveCompletionToNotes(0).appendNotes();
 
 	// --------
 	// next Q
 	convo.append('\nSpencer: What do you recommend a new musician learns first?\nAxl Rose:');
 	// genCompletion inserts convo.text as options.prompt
-	await convo.genCompletion('ada');
+	await convo.genCompletion({ engineId: 'ada' });
 	const sentence = convo.getCompletionChoice(0);
 	convo.append(sentence);
 
@@ -73,5 +75,4 @@ import { Chronology } from '../src';
 	// --------
 	// results:
 	console.log(convo.text);
-
 })();

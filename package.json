@@ -20,7 +20,7 @@
 		"typescript": "^4.2.3"
 	},
 	"dependencies": {
-		"gpt-ts": "thencc/gpt-ts",
+		"gpts": "^1.0.1",
 		"node-fetch": "^2.6.1"
 	},
 	"eslintConfig": {

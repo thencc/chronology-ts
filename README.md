@@ -1,4 +1,5 @@
 # chronology-ts
+
 conversational gpt-x
 
 ---
@@ -7,4 +8,4 @@ typscript version of python lib [chronology](https://github.com/OthersideAI/chro
 
 ---
 
-depends on [gpt-ts](https://github.com/thencc/gpt-ts)
+depends on [gpts](https://github.com/thencc/gpts)

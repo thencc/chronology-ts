@@ -45,8 +45,8 @@ export class Conversation extends GpTs {
 		// all completion funcs live here
 	};
 
-	constructor(apiKey: string) {
-		super(apiKey);
+	constructor(apiKey: string, origin = 'https://api.openai.com/v1') {
+		super(apiKey, origin);
 	}
 
 	// reads a .txt template conversation + adds it to this.text

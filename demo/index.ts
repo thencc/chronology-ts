@@ -7,7 +7,8 @@ import { Chronology } from '../src';
 (async () => {
 	const openai_apiKey = '';
 
-	const chrono = new Chronology(openai_apiKey);
+	// const chrono = new Chronology(openai_apiKey);
+	const chrono = new Chronology('pass', 'endpoint');
 	// console.log('chrono', chrono);
 
 	const convo = chrono.createConversation();
@@ -15,8 +16,7 @@ import { Chronology } from '../src';
 		/* {0} */ 'Spencer',
 		/* {1} */ 'Axl Rose',
 		/* {2} */ 'Rock',
-		// eslint-disable-next-line quotes
-		/* {3} */ "Sweet Child O' Mine",
+		/* {3} */ 'Sweet Child O Mine',
 		/* {4} */ 'his family',
 		/* {5} */ 'Where is the best place to live?' // 1st convo question is last arg
 	);

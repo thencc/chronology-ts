@@ -1,6 +1,6 @@
 {
 	"name": "chronology-ts",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "typescript port of chronology (gpt-3 python tool)",
 	"keywords": [
 		"gpt",
